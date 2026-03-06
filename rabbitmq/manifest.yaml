@@ -23,7 +23,7 @@ metadata:
     env: dev
 spec:
   clusterIP: None
-  selectors:
+  selector:
     project: roboshop
     component: rabbitmq
     env: dev
