@@ -55,7 +55,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: 
+  name: mysql
   namespace: roboshop
   labels:
     project: roboshop
