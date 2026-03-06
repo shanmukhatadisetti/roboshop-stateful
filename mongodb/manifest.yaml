@@ -23,7 +23,6 @@ kind: Service
 metadata:
   name: catalogue
   namespace: roboshop
-  clusterIP: none
   labels:
     project: roboshop
     env: dev
@@ -33,6 +32,7 @@ spec:
     component: mongodb
     env: dev
     tier: database
+  clusterIP: none
   ports:
   - protocol: TCP
     port: 27017
