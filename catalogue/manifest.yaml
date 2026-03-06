@@ -42,7 +42,7 @@ spec:
         image: shanmukhatadisetti/catalogue:v1
         envFrom:
         - configMap:
-          name: catalogue
+            name: catalogue
 ---
 apiVersion: v1
 kind: Service
