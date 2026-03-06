@@ -42,7 +42,7 @@ metadata:
     project: roboshop
     env: dev
 spec:
-  selectors:
+  selector:
     project: roboshop
     component: rabbitmq
     env: dev
