@@ -74,7 +74,7 @@ spec:
           mountPath: /data/db
       volumes:
       - name: mongodb-storage
-        PersistentVolumeClaim: 
+        persistentVolumeClaim: 
           claimName: mongodb-ebs-claim
 ---
 apiVersion: v1
