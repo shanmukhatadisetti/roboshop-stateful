@@ -45,6 +45,13 @@ spec:
           envFrom:
           - configMapRef:
               name: cart
+          resources:
+            requests:
+              cpu: "128m"
+              memory: "100Mi"
+            limits:
+              cpu: "256m"
+              memory: "200Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -66,3 +73,22 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cart
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cart
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
