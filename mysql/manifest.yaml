@@ -85,7 +85,7 @@ spec:
         imagePullPolicy: Always
         envFrom:
         - secretRef:
-          name: mysql
+            name: mysql
         volumeMounts:
         - name: mysql-storage
           mountPath: /var/lib/mysql

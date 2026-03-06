@@ -84,7 +84,7 @@ spec:
         imagePullPolicy: Always
         envFrom:
         - secretRef:
-          name: rabbitmq
+            name: rabbitmq
         volumeMounts:
         - name: rabbitmq-storage
           mountPath: /var/lib/rabbitmq 
