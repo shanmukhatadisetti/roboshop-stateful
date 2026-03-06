@@ -14,8 +14,8 @@ spec:
     tier: database
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 27017
+    targetPort: 27107
 
 ---
 apiVersion: v1
