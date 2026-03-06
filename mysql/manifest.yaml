@@ -1,87 +1,83 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalogue-normal-service
-  namespace: roboshop
+  name: mysql-normal-service
   labels:
     project: roboshop
     env: dev
 spec:
   selector:
     project: roboshop
-    component: catalogue
+    component: mysql
     env: dev
     tier: database
   ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
-
+    port: 3306
+    targetPort: 3306
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalogue
-  namespace: roboshop
+  name: mysql
   labels:
     project: roboshop
     env: dev
 spec:
+  clusterIP: None
   selector:
     project: roboshop
-    component: mongodb
+    component: mysql
     env: dev
     tier: database
-  clusterIP: None
-  ports:
+  ports: 
   - protocol: TCP
-    port: 27017
-    targetPort: 27017
-  
+    port: 3306
+    targetPort: 3306
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongodb
-  namespace: roboshop
+  name: mysql
   labels:
     project: roboshop
-    component: mongodb
+    component: mysql
     env: dev
     tier: database
 spec:
   replicas: 1
-  serviceName: mongodb
+  serviceName: mysql
   selector:
     matchLabels:
       project: roboshop
-      component: mongodb
+      component: mysql
       env: dev
       tier: database
   template:
     metadata:
-      labels:
+      labels: 
         project: roboshop
-        component: mongodb
+        component: mysql
         env: dev
         tier: database
     spec:
       containers:
-      - name: mongodb
-        image: shanmukhatadisetti/mongodb:v1
+      - name: mysql
+        image: shanmukhatadisetti/mysql:v1
         imagePullPolicy: Always
         volumeMounts:
-        - name: mongodb-storage
-          mountPath: /data/db
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
       volumes:
-      - name: mongodb-storage
-        persistentVolumeClaim: 
-          claimName: mongodb-ebs-claim
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-ebs-claim
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongodb-ebs-claim
+  name: mysql-ebs-claim
 spec:
   accessModes:
     - ReadWriteOnce
@@ -89,4 +85,4 @@ spec:
   resources:
     requests:
       storage: 4Gi
-      
+
