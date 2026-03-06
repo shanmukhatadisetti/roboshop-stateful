@@ -1,87 +1,102 @@
 apiVersion: v1
-kind: Service
+kind: Secret
 metadata:
-  name: catalogue-normal-service
+  name: rabbitmq
   namespace: roboshop
   labels:
+    component: rabbitmq
     project: roboshop
-    env: dev
-spec:
-  selector:
-    project: roboshop
-    component: catalogue
-    env: dev
+    env: dev 
     tier: database
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-
+type: opaque 
+data:
+  RABBITMQ_DEFAULT_USER: "cm9ib3Nob3A="
+  RABBITMQ_DEFAULT_PASS: "cm9ib3Nob3AxMjM="
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalogue
+  name: rabbitmq
   namespace: roboshop
   labels:
     project: roboshop
     env: dev
 spec:
-  selector:
+  clusterIP: None
+  selectors:
     project: roboshop
-    component: mongodb
+    component: rabbitmq
     env: dev
     tier: database
-  clusterIP: None
   ports:
   - protocol: TCP
-    port: 27017
-    targetPort: 27017
-  
+    port: 5672
+    targetPort: 5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-normal-service
+  namespace: roboshop
+  labels:
+    project: roboshop
+    env: dev
+spec:
+  selectors:
+    project: roboshop
+    component: rabbitmq
+    env: dev
+    tier: database
+  ports:
+  - protocol: TCP
+    port: 5672
+    targetPort: 5672
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongodb
-  namespace: roboshop
+  name: rabbitmq
   labels:
     project: roboshop
-    component: mongodb
+    component: rabbitmq
     env: dev
     tier: database
 spec:
   replicas: 3
-  serviceName: mongodb
+  serviceName: rabbitmq 
   selector:
     matchLabels:
       project: roboshop
-      component: mongodb
+      component: rabbitmq
       env: dev
       tier: database
   template:
     metadata:
       labels:
         project: roboshop
-        component: mongodb
+        component: rabbitmq
         env: dev
         tier: database
     spec:
       containers:
-      - name: mongodb
-        image: shanmukhatadisetti/mongodb:v1
+      - name: rabbitmq
+        image: rabbitmq:3
         imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+          name: rabbitmq
         volumeMounts:
-        - name: mongodb-storage
-          mountPath: /data/db
+        - name: rabbitmq-storage
+          mountPath: /var/lib/rabbitmq 
       volumes:
-      - name: mongodb-storage
-        persistentVolumeClaim: 
-          claimName: mongodb-ebs-claim
+      - name: rabbitmq-storage
+        persistentVolumeClaim:
+          claimName: rabbitmq-ebs-claim
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongodb-ebs-claim
+  name: rabbitmq-ebs-claim
 spec:
   accessModes:
     - ReadWriteOnce
@@ -89,4 +104,3 @@ spec:
   resources:
     requests:
       storage: 4Gi
-      

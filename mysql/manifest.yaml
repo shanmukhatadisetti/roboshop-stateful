@@ -1,6 +1,21 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels:
+    component: mysql
+    project: roboshop
+    env: dev 
+    tier: database
+type: opaque 
+data:
+  MYSQL_ROOT_PASSWORD: "Um9ib1Nob3BAMQ=="
+---
+apiVersion: v1
 kind: Service
 metadata:
+  namespace: roboshop
   name: mysql-normal-service
   labels:
     project: roboshop
@@ -19,6 +34,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: roboshop
   name: mysql
   labels:
     project: roboshop
@@ -39,14 +55,15 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql
+  name: 
+  namespace: roboshop
   labels:
     project: roboshop
     component: mysql
     env: dev
     tier: database
 spec:
-  replicas: 1
+  replicas: 3
   serviceName: mysql
   selector:
     matchLabels:
@@ -66,6 +83,9 @@ spec:
       - name: mysql
         image: shanmukhatadisetti/mysql:v1
         imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+          name: mysql
         volumeMounts:
         - name: mysql-storage
           mountPath: /var/lib/mysql
