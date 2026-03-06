@@ -41,8 +41,8 @@ spec:
       - name: user
         image: shanmukhatadisetti/user:v1
         envFrom:
-        - configMap:
-          name: user
+        - configMapRef:
+            name: user
 ---
 apiVersion: v1
 kind: Service
