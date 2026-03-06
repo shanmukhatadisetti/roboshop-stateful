@@ -41,7 +41,7 @@ metadata:
     env: dev
     tier: app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       component: payment
