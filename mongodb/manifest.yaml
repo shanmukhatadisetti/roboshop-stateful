@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Service
+metdata:
+  name: catalogue-normal-service
+  labels:
+    project: roboshop
+    env: dev
+spec:
+  selector:
+    project: roboshop
+    component: catalogue
+    env: dev
+    tier: database
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue
+  clusterIP: none
+  labels:
+    project: roboshop
+    env: dev
+spec:
+  selector:
+    project: roboshop
+    component: mongodb
+    env: dev
+    tier: database
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  labels:
+    project: roboshop
+    component: mongodb
+    env: dev
+    tier: database
+spec:
+  replicas: 1
+  serviceName: mongodb
+  selector:
+    matchLabels:
+      project: roboshop
+      component: mongodb
+      env: dev
+      tier: database
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        component: mongodb
+        env: dev
+        tier: database
+    spec:
+      containers:
+      - name: catalogue
+        image: shanmukhatadisetti/catalogue:v1
+        volumeMounts:
+        - name: mongodb-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-storage
+        PersistentVolumeClaim: 
+          claimName: mongodb-ebs-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-ebs-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: roboshop-ebs-sc
+  resources:
+    requests:
+      storage: 4Gi
+      
