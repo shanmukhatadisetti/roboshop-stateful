@@ -9,13 +9,13 @@ metadata:
 spec:
   selector:
     project: roboshop
-    component: catalogue
+    component: mongodb
     env: dev
     tier: database
   ports:
   - protocol: TCP
     port: 27017
-    targetPort: 27107
+    targetPort: 27017
 
 ---
 apiVersion: v1
