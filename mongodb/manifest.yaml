@@ -32,7 +32,7 @@ spec:
     component: mongodb
     env: dev
     tier: database
-  clusterIP: none
+  clusterIP: None
   ports:
   - protocol: TCP
     port: 27017
