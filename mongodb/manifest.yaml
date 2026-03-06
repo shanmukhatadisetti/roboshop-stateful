@@ -73,20 +73,13 @@ spec:
         volumeMounts:
         - name: mongodb-storage
           mountPath: /data/db
-      volumes:
-      - name: mongodb-storage
-        persistentVolumeClaim: 
-          claimName: mongodb-ebs-claim
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-ebs-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: roboshop-ebs-sc
-  resources:
-    requests:
-      storage: 4Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: roboshop-ebs-sc
+      resources:
+        requests:
+          storage: 4Gi
       

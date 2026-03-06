@@ -71,21 +71,12 @@ spec:
         volumeMounts:
         - name: redis-storage
           mountPath: /db
-      volumes:
-      - name: redis-storage
-        persistentVolumeClaim:
-          claimName: redis-pvc
-
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: redis-pvc
-spec:
-  accessModes:
-  - ReadWriteOnce
-  storageClassName: roboshop-ebs-sc
-  resources:
-    requests:
-      storage: 4Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: roboshop-ebs-sc
+      resources:
+        requests:
+          storage: 4Gi

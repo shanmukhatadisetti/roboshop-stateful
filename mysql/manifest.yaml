@@ -89,20 +89,14 @@ spec:
         volumeMounts:
         - name: mysql-storage
           mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-storage
-        persistentVolumeClaim:
-          claimName: mysql-ebs-claim
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-ebs-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: roboshop-ebs-sc
-  resources:
-    requests:
-      storage: 4Gi
+
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: roboshop-ebs-sc
+      resources:
+        requests:
+          storage: 4Gi
 
