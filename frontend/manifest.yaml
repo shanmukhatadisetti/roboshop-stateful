@@ -85,7 +85,7 @@ metadata:
     env: dev
     tier: wed
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       component: frontend

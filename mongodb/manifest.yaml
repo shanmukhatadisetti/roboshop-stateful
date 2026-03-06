@@ -50,7 +50,7 @@ metadata:
     env: dev
     tier: database
 spec:
-  replicas: 3
+  replicas: 1
   serviceName: mongodb
   selector:
     matchLabels:
