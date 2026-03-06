@@ -63,7 +63,7 @@ metadata:
     env: dev
     tier: database
 spec:
-  replicas: 1
+  replicas: 3
   serviceName: mysql
   selector:
     matchLabels:
